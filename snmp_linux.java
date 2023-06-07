@@ -1,4 +1,6 @@
 
+package SNMP;
+
 
 import java.io.IOException;
 
@@ -48,10 +50,10 @@ public class snmpget  {
 			DefaultUdpTransportMapping transport = new DefaultUdpTransportMapping();
 			snmp = new Snmp(transport);
 			snmp.listen();
-			System.out.println("-------> PDU <-------");
+			
 			pdu.setType(PDU.GET);
 			ResponseEvent respEvent = snmp.send(pdu, target);
-			System.out.println("PeerAddress:" + respEvent.getPeerAddress());
+			
 			PDU response = respEvent.getResponse();
 
 			if (response == null) {
@@ -59,8 +61,6 @@ public class snmpget  {
 			} else {
 
 				
-
-				System.out.println("response pdu size is " + response.size());
 				for (int i = 0; i < response.size(); i++) {
 					VariableBinding vb = response.get(i);
 					System.out.println(vb.getOid() + " = " + vb.getVariable());
@@ -83,14 +83,19 @@ public class snmpget  {
 		}
 	}
 
-
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		String ip = "192.168.64.5";
 		String community = "public";
-		String oidval = "1.3.6.1.2.1.1.1.0";
-		snmpget.snmpGet(ip, community, oidval);
-
+		String[] oid = {"1.3.6.1.2.1.1.1.0","1.3.6.1.2.1.25.1.4.0"};
+		for (String oidval : oid) {
+			snmpget.snmpGet(ip, community, oidval);
+		}
+		
 	}
 
 }
